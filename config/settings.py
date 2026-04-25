@@ -151,3 +151,11 @@ PAYOUT_CONFIG = {
     "FAILURE_RATE": 0.20,  # 20% fail
     # Remaining 10% hang (stay in processing)
 }
+
+# Railway / Production proxy settings
+CSRF_TRUSTED_ORIGINS = os.environ.get(
+    "CSRF_TRUSTED_ORIGINS",
+    "http://localhost:5173,http://localhost:3000"
+).split(",")
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
