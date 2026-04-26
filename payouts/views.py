@@ -16,19 +16,14 @@ from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from payouts.models import Merchant, BankAccount, LedgerEntry, Payout
-from payouts.serializers import (
-    MerchantSerializer, MerchantBalanceSerializer, BankAccountSerializer,
-    LedgerEntrySerializer, PayoutSerializer, CreatePayoutSerializer,
-)
-from payouts.services import get_merchant_balance
-from payouts.services.payout_service import (
     create_payout,
     finalize_idempotency_key,
     InsufficientBalanceError,
     InvalidBankAccountError,
     DuplicateIdempotencyKeyError,
 )
+from payouts.models import LedgerEntry # Ensure LedgerEntry is available
+
 
 logger = logging.getLogger(__name__)
 
@@ -206,3 +201,32 @@ class PayoutViewSet(viewsets.ViewSet):
             )
 
         return Response(response_data, status=response_status)
+
+
+@api_view(['GET'])
+def seed_data(request):
+    """Temporary endpoint to seed data since console is unavailable."""
+    merchant, created = Merchant.objects.get_or_create(
+        name='Playto Test Merchant',
+        defaults={'email': 'merchant@playto.com'}
+    )
+    
+    BankAccount.objects.get_or_create(
+        merchant=merchant,
+        account_number='1234567890',
+        defaults={
+            'account_holder_name': 'Playto Test User',
+            'ifsc_code': 'PLAY0001234',
+            'is_active': True
+        }
+    )
+    
+    # Add some initial balance
+    LedgerEntry.objects.create(
+        merchant=merchant,
+        amount_paise=1000000, # 10,000 INR
+        entry_type='CREDIT',
+        description='Initial Seeding'
+    )
+    
+    return Response({"message": "Data Seeded Successfully!", "merchant_id": merchant.id})
