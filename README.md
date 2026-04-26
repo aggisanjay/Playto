@@ -159,23 +159,25 @@ This will:
 - **Celery Workers**: Scale workers by running `docker-compose -f docker-compose.prod.yml up -d --scale celery-worker=3`.
 - **Backend**: Gunicorn is configured with 4 workers by default in the compose file.
 
-## Deploying to Render
+## 🌐 Live Deployment
 
-This project includes a `render.yaml` file for "one-click" deployment using Render Blueprints.
+The project is deployed in a hybrid cloud environment:
+- **Backend & Workers**: [Railway](https://railway.app) (PostgreSQL + Redis + Django + Celery)
+- **Frontend**: [Vercel](https://vercel.com) (React SPA)
 
-1.  **Push your code** to a GitHub or GitLab repository.
-2.  **Create a New Blueprint** on Render:
-    - Go to [dashboard.render.com](https://dashboard.render.com)
-    - Click **New +** > **Blueprint**
-    - Connect your repository.
-3.  **Approve the Plan**: Render will automatically detect the `render.yaml` and provision:
-    - PostgreSQL Database
-    - Redis (for Celery)
-    - Django Backend (Gunicorn)
-    - React Frontend (Nginx)
-    - Celery Worker & Beat
-4.  **Update Environment Variables**:
-    - After the first deploy starts, you may need to update `ALLOWED_HOSTS` and `CORS_ALLOWED_ORIGINS` in the Render dashboard for the Backend service to match your generated URLs.
+### 🚀 Production URLs
+- **Dashboard**: [https://playto-beige.vercel.app](https://playto-beige.vercel.app)
+- **API Base**: `https://playto-production-5204.up.railway.app/api/v1/`
+
+### 🛠️ Initializing Production Data
+Since the production environment is headless, use the built-in Seed API to populate test merchants:
+1. Visit: `https://playto-production-5204.up.railway.app/api/v1/seed/`
+2. This runs the `seed_data` command on the Railway Postgres instance.
+3. Refresh the Dashboard to see the new merchants.
+
+---
+
+## Quick Start
 
 Key tests:
 - **Concurrency**: Two simultaneous ₹60 payouts on ₹100 balance — exactly one succeeds
