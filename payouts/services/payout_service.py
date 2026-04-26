@@ -168,7 +168,8 @@ def create_payout(merchant_id, amount_paise, bank_account_id, idempotency_key):
     logger = logging.getLogger(__name__)
     try:
         from payouts.tasks import process_payout
-        process_payout.delay(str(payout.id))
+        task = process_payout.delay(str(payout.id))
+        logger.info(f"Successfully dispatched process_payout task {task.id} for payout {payout.id}")
     except Exception as e:
         logger.warning(f"Task dispatch/execution error (non-fatal): {e}")
 
