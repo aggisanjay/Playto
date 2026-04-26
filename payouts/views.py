@@ -211,29 +211,20 @@ class PayoutViewSet(viewsets.ViewSet):
 
 @api_view(['GET'])
 def seed_data(request):
-    """Temporary endpoint to seed data since console is unavailable."""
-    merchant, created = Merchant.objects.get_or_create(
-        name='Playto Test Merchant',
-        defaults={'email': 'merchant@playto.com'}
-    )
+    """Call the project's official seed_data management command."""
+    from django.core.management import call_command
+    from io import StringIO
     
-    BankAccount.objects.get_or_create(
-        merchant=merchant,
-        account_number='1234567890',
-        defaults={
-            'account_holder_name': 'Playto Test User',
-            'ifsc_code': 'PLAY0001234',
-            'bank_name': 'Playto Bank',
-            'is_primary': True
-        }
-    )
-    
-    # Add some initial balance
-    LedgerEntry.objects.create(
-        merchant=merchant,
-        amount_paise=1000000, # 10,000 INR
-        entry_type=LedgerEntry.EntryType.CREDIT,
-        description='Initial Seeding'
-    )
-    
-    return Response({"message": "Data Seeded Successfully!", "merchant_id": merchant.id})
+    out = StringIO()
+    try:
+        call_command('seed_data', stdout=out)
+        result = out.getvalue()
+        return Response({
+            "message": "Project Seed Data Loaded Successfully!",
+            "details": result
+        })
+    except Exception as e:
+        return Response({
+            "error": str(e),
+            "message": "Failed to run seed_data command"
+        }, status=500)
