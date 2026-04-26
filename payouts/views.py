@@ -223,7 +223,8 @@ def seed_data(request):
         defaults={
             'account_holder_name': 'Playto Test User',
             'ifsc_code': 'PLAY0001234',
-            'is_active': True
+            'bank_name': 'Playto Bank',
+            'is_primary': True
         }
     )
     
@@ -231,7 +232,7 @@ def seed_data(request):
     LedgerEntry.objects.create(
         merchant=merchant,
         amount_paise=1000000, # 10,000 INR
-        entry_type='CREDIT',
+        entry_type=LedgerEntry.EntryType.CREDIT,
         description='Initial Seeding'
     )
     
