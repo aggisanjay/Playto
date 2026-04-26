@@ -104,18 +104,12 @@ REST_FRAMEWORK = {
 }
 
 # CORS — allow React dev server
-CORS_ALLOWED_ORIGINS = os.environ.get(
-    "CORS_ALLOWED_ORIGINS",
-    "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173"
-).split(",")
+# --- NUCLEAR CORS FIX ---
+CORS_ALLOW_ALL_ORIGINS = True  
+CORS_ALLOW_CREDENTIALS = True
 
-# Add the specific Vercel origin if not already there
-if "https://playto-beige.vercel.app" not in CORS_ALLOWED_ORIGINS:
-    CORS_ALLOWED_ORIGINS.append("https://playto-beige.vercel.app")
+ALLOWED_HOSTS = ["*"] # Allow all hosts temporarily to bypass 400 errors
 
-CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^https://.*\.vercel\.app$",
-]
 CORS_ALLOW_HEADERS = [
     "accept",
     "accept-encoding",
