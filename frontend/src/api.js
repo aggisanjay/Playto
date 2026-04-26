@@ -3,7 +3,8 @@
  * Handles all communication with the Django backend.
  */
 
-const API_BASE = '/api/v1';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
+const API_BASE = `${BACKEND_URL}/api/v1`;
 
 async function apiRequest(url, options = {}) {
   const { headers: customHeaders, ...restOptions } = options;
