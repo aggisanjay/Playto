@@ -46,7 +46,7 @@ export default function App() {
           <h2 className="text-xl font-semibold text-surface-100 mb-2">Connection Error</h2>
           <p className="text-surface-400 text-sm mb-6">{error}</p>
           <p className="text-surface-500 text-xs">
-            Make sure the Django backend is running on <code className="text-primary-400">localhost:8000</code>
+            Check that the backend API is reachable and CORS is configured correctly.
           </p>
         </div>
       </div>
